@@ -26,7 +26,8 @@ spec:
         path: infra/api-s3
         helm:
           parameters:
-            bucketName: '{{.name}}-bucket-testing'
+            - name: 's3api.bucketName'
+              value: '{{.name}}-bucket-testing'
       destination:
         server: '{{.server}}' # 'server' field of the secret
         namespace: python-s3-api
