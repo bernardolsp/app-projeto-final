@@ -1,0 +1,30 @@
+# templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-s3-api
+  name: {{ .Release.Name }}-s3-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    eks.amazonaws.com/role-arn: arn:aws:iam::628042573059:role/app
+spec:
+  replicas: {{ .Values.s3api.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-s3-api
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-s3-api
+    spec:
+      containers:
+      - image: {{ .Values.s3api.image }}
+        name: s3-api
+        ports:
+        - containerPort: {{ .Values.s3api.port }}
+        imagePullPolicy: {{ .Values.s3api.imagePullPolicy }}
+        env:
+        - name: S3_BUCKET_NAME
+          value: {{ .Values.s3api.bucketName }}
+      serviceAccountName: {{ .Release.Name }}-s3-api

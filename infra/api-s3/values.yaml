@@ -1,0 +1,10 @@
+# values.yaml
+s3api:
+  image: devlopesbernardo/simple-s3-api:1.0
+  replicas: 1
+  port: 8000
+  imagePullPolicy: Always
+  bucketName: testin-bernardo-123-bucket-dev
+
+serviceAccount:
+  create: true
