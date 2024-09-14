@@ -4,7 +4,6 @@ s3api:
   replicas: 1
   port: 8000
   imagePullPolicy: Always
-  bucketName: testin-bernardo-123-bucket-dev
 
 serviceAccount:
   create: true

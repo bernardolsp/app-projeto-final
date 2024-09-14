@@ -1,14 +1,43 @@
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
-  name: guestbook
-  namespace: argocd
+  name: python-s3-api
+  namespace: argo
 spec:
-  project: default
-  source:
-    repoURL: https://github.com/argoproj/argocd-example-apps.git
-    targetRevision: HEAD
-    path: guestbook
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: guestbook
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - clusters:
+      selector:
+        matchExpressions:
+        - key: environment
+          operator: In
+          values:
+          - dev
+          - prod
+  template:
+    metadata:
+      name: '{{.name}}-python-s3-api'
+    spec:
+      project: "default"
+      source:
+        repoURL: https://github.com/bernardolsp/app-projeto-final
+        targetRevision: master
+        path: infra/api-s3
+        helm:
+          parameters:
+            bucketName: '{{.name}}-bucket-testing'
+      destination:
+        server: '{{.server}}' # 'server' field of the secret
+        namespace: python-s3-api
+      syncPolicy:
+        automated: {}
+        syncOptions:
+        - CreateNamespace=true
+        - Validate=false
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2

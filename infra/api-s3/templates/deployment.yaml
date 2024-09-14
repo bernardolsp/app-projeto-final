@@ -5,9 +5,6 @@ metadata:
   labels:
     app: {{ .Release.Name }}-s3-api
   name: {{ .Release.Name }}-s3-api
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-    eks.amazonaws.com/role-arn: arn:aws:iam::628042573059:role/app
 spec:
   replicas: {{ .Values.s3api.replicas }}
   selector:
